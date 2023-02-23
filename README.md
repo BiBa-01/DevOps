@@ -40,3 +40,4 @@ $ terraform plan -out solution.plan
 $ terraform apply "solution.plan"
 
 #### 7. Destroy resources if not required anymore ( be careful of costs!):
+$ terraform destroy
