@@ -34,8 +34,8 @@ $ packer build packer/server.json
 The file terraform/vars.tf includes all varialbes used inside the terraform/main.tf terraform template. If you want to use your own code, you need to modify the variables in terraform/vars.tf first. For example to use other name conventions for your infrastructure, other azure region etc.
 
 ##### 5b. Creation of Terraform template
-$ terraform init
-$ terraform plan -out solution.plan
+'- $ terraform init
+'- $ terraform plan -out solution.plan
 
 #### 6. Deploy with Terraform by use of the packer image
 
