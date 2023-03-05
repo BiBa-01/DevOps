@@ -39,7 +39,7 @@ The file terraform/vars.tf includes all varialbes used inside the terraform/main
 
 #### 6. Deploy with Terraform by use of the packer image
 
-$ terraform apply "solution.plan"
+$ terraform apply "solution1.plan"
 
 #### 7. Destroy resources if not required anymore ( be careful of costs!):
 $ terraform destroy
