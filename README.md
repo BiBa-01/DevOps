@@ -28,12 +28,12 @@ Further I added a policy to deny any deployments of resources without a tag.
 
 $ packer build packer/server.json
 
-#### 5. Create the Terraform template for the ressources to deploy
+#### 5. Preparation and creation of the Terraform template for the ressources to deploy
 
 ##### 5a.Modify variables for your own purpose:
-The file terraform/vars.tf includes all varialbes used inside the terraform/main.tf terraform template. If you want to use your own code, you need to modify the variables in terraform/vars.tf first. For example to use other name conventions for your 
-Same for terraform/main.tf, if you need 
+The file terraform/vars.tf includes all varialbes used inside the terraform/main.tf terraform template. If you want to use your own code, you need to modify the variables in terraform/vars.tf first. For example to use other name conventions for your infrastructure, other azure region etc.
 
+##### 5b. Creation of Terraform template
 $ terraform init
 $ terraform plan -out solution.plan
 
