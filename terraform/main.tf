@@ -3,7 +3,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "3.0.1"
+      version = "3.46.0"
     }
   }
 }
@@ -53,7 +53,7 @@ resource "azurerm_virtual_network" "main" {
 }
 
 # Create Subnet in above Virtual Network
-resource "azurerm_subnet" "internal" {
+resource "azurerm_subnet" "main" {
   name                 = "internal"
   resource_group_name  = azurerm_resource_group.main.name
   virtual_network_name = azurerm_virtual_network.main.name
@@ -82,8 +82,8 @@ resource "azurerm_network_interface" "main" {
   location            = azurerm_resource_group.main.location
 
   ip_configuration {
-    name                          = "internal"
-    subnet_id                     = azurerm_subnet.internal.id
+    name                          = "main"
+    subnet_id                     = azurerm_subnet.main.id
     private_ip_address_allocation = "Dynamic"
 
   }
@@ -130,17 +130,19 @@ resource "azurerm_lb" "main" {
 #Backend pool for loadbalancer
 
 resource "azurerm_lb_backend_address_pool" "main" {
-    #resource_group_name = azurerm_resource_group.main.name
-    name = "${var.prefix}-lb-backend-pool"
-    loadbalancer_id = azurerm_lb.main.id
-
+  name = "${var.prefix}_lb_backend_address_pool"
+  loadbalancer_id = azurerm_lb.main.id
 }
 
-#resource "azurerm_network_interface_backend_address_pool" "main" {
-#  network_interface_id = azurerm_network_interface.main.id
- # ip_configuration_name = "internal"
-#  backend_address_pool_id        = azurerm_lb_backend_address_pool.main.id
-#}
+
+#Association of loadbalancer to backend address pool
+
+resource "azurerm_network_interface_backend_address_pool_association" "main" {
+  count                           = var.network_interface_count
+  network_interface_id = azurerm_network_interface.main[count.index].id
+  ip_configuration_name = "internal"
+  backend_address_pool_id = azurerm_lb_backend_address_pool.main.id
+}
 
 
 #Create Virtual Machine availability set
