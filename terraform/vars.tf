@@ -57,5 +57,5 @@ variable "network_interface_count" {
 
 variable "image" {
     description = "Packer image to be used"
-    default = "myPackerImage"
+    default = "myPackerImage1"
 }
