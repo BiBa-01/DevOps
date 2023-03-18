@@ -1,4 +1,4 @@
-﻿#Creating Infrastructure in Azure with Terraform
+#Creating Infrastructure in Azure with Terraform
 terraform {
   required_providers {
     azurerm = {
@@ -23,7 +23,7 @@ data "azurerm_resource_group" "image" {
 }
 
 #data "azurerm_image" "image" {
-  #name = "myPackerImage"
+  #name = "myPackerImage1"
  # resource_group_name = data.udacity-demo-rg
 #}
 
@@ -70,9 +70,71 @@ resource "azurerm_network_security_group" "main" {
     env = "Production"
  }
     
+
+# Create security rules
+  security_rule1 {
+    name                         = "DenyAllInbound"
+    description                  = "This rule with low priority deny all the inbound traffic."
+    priority                     = 4096
+    direction                    = "Inbound"
+    access                       = "Deny"
+    protocol                     = "*"
+    source_port_range            = "*"
+    destination_port_range       = "*"
+    source_address_prefix        = "*"
+    destination_address_prefix   = "*"
 }
 
+  security_rule {
+    name                         = "AllowInboundInsideVN"
+    description                  = "This rule allow the inbound traffic inside the same virtual network."
+    priority                     = 4050
+    direction                    = "Inbound"
+    access                       = "Allow"
+    protocol                     = "*"
+    source_port_ranges           = "*"
+    destination_port_ranges      = "*"
+    source_address_prefix        = "VirtualNetwork"
+    destination_address_prefix   = "VirtualNetwork"
+    
+}
 
+  security_rule {
+    name                         = "AllOutbound-Deny"
+    priority                     = 4096
+    direction                    = "Outbound"
+    access                       = "Deny"
+    protocol                     = "*"
+    source_port_ranges           = "*"
+    destination_port_ranges      = "*"
+    source_address_prefix        = "*"
+    destination_address_prefix   = "*"
+}
+
+security_rule {
+    name                         = "AllowHTTPFromLB"
+    description                  = "This rule allow the HTTP traffic from the load balancer."
+    priority                     = 4000
+    direction                    = "Inbound"
+    access                       = "Allow"
+    protocol                     = "Tcp"
+    source_port_ranges           = "*"
+    destination_port_ranges      = "8080"
+    source_address_prefix        = "*"
+    destination_address_prefix   = "VirtualNetwork"
+}
+
+security_rule {
+    name                         = "VNet-Outbound-Allow"
+    priority                     = 4050
+    direction                    = "Outbound
+    access                       = "Allow"
+    protocol                     = "+"
+    source_port_ranges           = "*"
+    destination_port_ranges      = "*"
+    source_address_prefix        = "VirtualNetwork"
+    destination_address_prefix   = "VirtualNetwork"
+}
 
 #Create a Network Interface
 resource "azurerm_network_interface" "main" {
