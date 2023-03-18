@@ -29,6 +29,7 @@
     }
     ],
     "provisioners": [{
+        "inline": [
         "echo 'Hello, World!' > index.html",
         "echo '[Unit]' >http.service",
         "echo 'Description=HTTP Hello World' >> http.service",
