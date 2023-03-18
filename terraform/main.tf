@@ -1,12 +1,12 @@
 #Creating Infrastructure in Azure with Terraform
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "3.46.0"
-    }
-  }
-}
+#terraform {
+#  required_providers {
+ #   azurerm = {
+# #     source  = "hashicorp/azurerm"
+ #     version = "3.46.0"
+ #   }
+ # }
+#}
 provider "azurerm" {
   features {}
 }
@@ -62,19 +62,18 @@ resource "azurerm_subnet" "main" {
 
 #Create Network security group and rule
 resource "azurerm_network_security_group" "main" {
-  name                  ="${var.prefix}-network_security_group"
+  name                  ="${var.prefix}-nsg"
   location              = azurerm_resource_group.main.location
   resource_group_name   = azurerm_resource_group.main.name
 
     tags = {
     env = "Production"
- }
+    }
     
 
 # Create security rules
-  security_rule1 {
+  security_rule {
     name                         = "DenyAllInbound"
-    description                  = "This rule with low priority deny all the inbound traffic."
     priority                     = 4096
     direction                    = "Inbound"
     access                       = "Deny"
@@ -83,21 +82,20 @@ resource "azurerm_network_security_group" "main" {
     destination_port_range       = "*"
     source_address_prefix        = "*"
     destination_address_prefix   = "*"
-}
+    }
 
   security_rule {
     name                         = "AllowInboundInsideVN"
-    description                  = "This rule allow the inbound traffic inside the same virtual network."
     priority                     = 4050
     direction                    = "Inbound"
     access                       = "Allow"
     protocol                     = "*"
-    source_port_ranges           = "*"
-    destination_port_ranges      = "*"
-    source_address_prefix        = "VirtualNetwork"
-    destination_address_prefix   = "VirtualNetwork"
+    source_port_range           = "*"
+    destination_port_range      = "*"
+    source_address_prefix        = "10.0.2.0/24"
+    destination_address_prefix   = "10.0.2.0/24"
     
-}
+    }
 
   security_rule {
     name                         = "AllOutbound-Deny"
@@ -105,35 +103,35 @@ resource "azurerm_network_security_group" "main" {
     direction                    = "Outbound"
     access                       = "Deny"
     protocol                     = "*"
-    source_port_ranges           = "*"
-    destination_port_ranges      = "*"
+    source_port_range          = "azurerm_virtual_network.main.name"
+    destination_port_range      = "azurerm_virtual_network.main.name"
     source_address_prefix        = "*"
     destination_address_prefix   = "*"
-}
+    }
 
-security_rule {
+   security_rule {
     name                         = "AllowHTTPFromLB"
-    description                  = "This rule allow the HTTP traffic from the load balancer."
     priority                     = 4000
     direction                    = "Inbound"
     access                       = "Allow"
     protocol                     = "Tcp"
-    source_port_ranges           = "*"
-    destination_port_ranges      = "8080"
-    source_address_prefix        = "*"
-    destination_address_prefix   = "VirtualNetwork"
-}
+    source_port_range           = "azurerm_virtual_network.main.name"
+    destination_port_range      = "80"
+    source_address_prefix        = "Internet"
+    destination_address_prefix   = "*"
+    }
 
-security_rule {
+  security_rule {
     name                         = "VNet-Outbound-Allow"
     priority                     = 4050
-    direction                    = "Outbound
+    direction                    = "Outbound"
     access                       = "Allow"
-    protocol                     = "+"
-    source_port_ranges           = "*"
-    destination_port_ranges      = "*"
-    source_address_prefix        = "VirtualNetwork"
-    destination_address_prefix   = "VirtualNetwork"
+    protocol                     = "*"
+    source_port_range           = "*"
+    destination_port_range      = "*"
+    source_address_prefix        = "10.0.2.0/24"
+    destination_address_prefix   = "10.0.2.0/24"
+        }
 }
 
 #Create a Network Interface
