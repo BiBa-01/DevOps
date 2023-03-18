@@ -23,7 +23,7 @@ data "azurerm_resource_group" "image" {
 }
 
 #data "azurerm_image" "image" {
-  #name = "myPackerImage1"
+ # name = "myPackerImage1"
  # resource_group_name = data.udacity-demo-rg
 #}
 

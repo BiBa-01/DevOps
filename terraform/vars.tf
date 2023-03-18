@@ -5,7 +5,7 @@
 
 variable "udacity-demo-rg" {
     description = ""
-    default = "myPackerImage"
+    default = "myPackerImage1"
     }
 
 variable "location" {
@@ -27,7 +27,7 @@ variable "password"{
 
 #variable  "image"  {
 #  description = "Image to be used "
-#  default = "myPackerImage"
+#  default = "myPackerImage1"
 #}
 
 variable "app_port" {
@@ -52,7 +52,7 @@ variable "vm_count" {
 variable "network_interface_count" {
     description = "Number of Network interfaces to deploy"
     type = string
-    
+    default = 1
 }
 
 variable "image" {
